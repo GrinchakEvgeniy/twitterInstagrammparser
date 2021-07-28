@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Access</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+</head>
+<body>
+
+	<div class="container">
+		<div class="wrap">
+			<div class="inst">
+				<p class="label_">Instagram</p>
+				<div class="form">
+					<input type="text" id="inst_l" name="login" value="{{data.instagram.login}}">
+					<input type="password" id="inst_p" name="password" value="{{data.instagram.password}}">
+					<button id="inst_save">Save</button>
+					<button id="inst_check">Check</button>
+					<div class="res_test">
+						<div class="spinner-border text-primary hidden inst_sp" role="status"><span class="sr-only"></span></div>
+						<div class="passed hidden"><i class="far fa-check-circle"></i></div>
+						<div class="failed hidden"><i class="fas fa-exclamation-triangle"></i></div>
+						<div class="alert alert-success hidden saved" role="alert">
+						  Saved
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function($){
+
+			
+
+			$("#inst_check").on('click', function(){
+				$('.passed').addClass('hidden');
+				$('.failed').addClass('hidden');
+				$('.saved').addClass('hidden');
+				$('.inst_sp').removeClass('hidden');
+				const data = {
+					"type": "instagram",
+					"login": $('#inst_l').val(),
+					"password": $('#inst_p').val()
+				}
+				$.ajax({
+				    url: '/test_access',
+				    type: "POST",
+				    dataType: 'json',
+            		contentType: 'application/json',
+				    data: JSON.stringify(data),
+				    success: function (data) {
+				        if(data['result']){
+				        	$('.inst_sp').addClass('hidden');
+				        	$('.passed').removeClass('hidden');
+				        }else{
+				        	$('.inst_sp').addClass('hidden');
+				        	$('.failed').removeClass('hidden');
+				        }
+				    }
+				})
+			})
+
+			$("#inst_save").on('click', function(){
+				$('.passed').addClass('hidden');
+				$('.failed').addClass('hidden');
+				$('.saved').addClass('hidden');
+				$('.inst_sp').removeClass('hidden');
+				const data = {
+					"type": "instagram",
+					"login": $('#inst_l').val(),
+					"password": $('#inst_p').val()
+				}
+				$.ajax({
+				    url: '/new_access',
+				    type: "POST",
+				    dataType: 'json',
+            		contentType: 'application/json',
+				    data: JSON.stringify(data),
+				    success: function (data) {
+				        if(data['result']){
+				        	$('.inst_sp').addClass('hidden');
+				        	$('.saved').removeClass('hidden');
+				        }
+				    }
+				})
+			})
+
+
+		})
+	</script>
+	<style type="text/css">
+		.hidden{
+			display: none;
+		}
+		.res_test{
+			display: flex;
+		}
+		.form{
+			display: flex;
+			justify-content: space-around;
+		}
+		i{
+			font-size: 30px;
+		}
+		.passed i{
+			color: green;
+		}
+		.failed i{
+			color: orange;
+		}
+		.saved{
+			margin: 0;
+			padding: 2px 10px;
+		}
+	</style>
+</body>
+</html>
