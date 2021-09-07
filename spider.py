@@ -1,6 +1,8 @@
 from pyvirtualdisplay import Display
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import requests
@@ -23,7 +25,7 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--no-sandbox')
 # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 def twitter():
-	headers = {"Authorization": "Bearer **********************************"}
+	headers = {"Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAABLURwEAAAAAHxdfh34yHeo4QJwPwj8hERELUgg%3D4RYi2ioeBB0dgWLsEzyfGgYyVTLwhKQGKh9pSWMyPRQGHtAcxT"}
 	with open("data.json", "r") as jsonFile:
 		jsonObject = json.load(jsonFile)
 		for hash_name in jsonObject['hashtags']:
@@ -96,15 +98,21 @@ def test(type, login, password):
 		# WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']"))).submit()
 		# WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/section/main/div/div/div/div/button"))).click()
 		# return False
-		try:
-			driver.get("https://www.instagram.com/")
-			driver.maximize_window()
-			WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='username']"))).send_keys(login)
-			WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='password']"))).send_keys(password)
-			WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']"))).submit()
-			WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/section/main/div/div/div/div/button"))).click()
-			return True
-		except:
-			return False
-		finally:
-			driver.close()
+		#try:
+		driver.get('chrome://settings/clearBrowserData')
+		driver.find_element_by_xpath('//settings-ui').send_keys(Keys.ENTER)
+		driver.get("https://www.instagram.com/")
+		driver.maximize_window()
+		WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='username']"))).send_keys(login)
+		WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='password']"))).send_keys(password)
+		WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']"))).submit()
+		
+		time.sleep(10)
+		html = driver.page_source
+		print(BeautifulSoup(html))
+		WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='react-root']/section/nav/div[2]/div/div/div[1]"))).click()
+		return True
+		#except:
+		#	return False
+		#finally:
+		driver.close()

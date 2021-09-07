@@ -1,10 +1,20 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 from spider import parser, test, twitter
 import time 
 import json
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
+
+@app.route("/")
+def main():
+	return "OK"
+
+@app.route("/.well-known/pki-validation/DBA3062610F402ACB1677D8F682BF43A.txt")
+def ssl():
+	return send_file("/mnt/.well-known/pki-validation/DBA3062610F402ACB1677D8F682BF43A.txt", attachment_filename="DBA3062610F402ACB1677D8F682BF43A.txt")
 
 
 @app.route("/force", methods=['GET'])
